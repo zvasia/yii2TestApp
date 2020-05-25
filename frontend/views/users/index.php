@@ -62,10 +62,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'text'],
             'full_name:text',
             'balance',
-            ['attribute' => 'status',
-                'format' => 'boolean'],
-        ],
-    ]) ?>
+            ['class' => 'yii\grid\CheckboxColumn',
+                'checkboxOptions' => function ($model) {
+                    return [
+                        'checked' => $model->status == 1 ? true : false,
+                        'onchange' => '$.ajax("index.php?r=users/changestatus&id='
+                            .$model->id.'&status=" + ($(this).prop("checked") ? "1" : "0") );'
+                    ];
+                }
+            ]]])
+
+            ?>
 
 
 </div>

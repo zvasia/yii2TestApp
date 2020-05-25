@@ -13,9 +13,15 @@ class AdditionSearch extends Addition
     {
         return [
             [['user_id', ], 'integer'],
-            [['date'], 'safe'],
-            ['start', 'date', 'timestampAttribute' => 'start', 'format' => 'php:M d, Y, H:i:s'],
-            ['end', 'date', 'timestampAttribute' => 'end', 'format' => 'php:d.m.Y H:i:s']
+            //[['date'], 'safe'],
+            ['start', 'date', 'timestampAttribute' => 'start', 'timestampAttributeFormat' => 'php:Y-m-d H:i:s', 'format' => 'php:M d, Y, H:i:s'],
+//            ['start', 'date', 'timestampAttribute' => 'start', 'format' => 'php:Y-m-d H:i:s'
+
+            ['end', 'date', 'timestampAttribute' => 'end', 'timestampAttributeFormat' => 'php:Y-m-d H:i:s', 'format' => 'php:M d, Y, H:i:s'],
+
+//                ['end', 'date', 'timestampAttribute' => 'end', 'format' => 'php:Y-m-d H:i:s'
+//                ]
+
         ];
     }
 
@@ -46,21 +52,22 @@ class AdditionSearch extends Addition
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
         // grid filtering conditions
+
         $query->andFilterWhere([
             'user_id' => $this->user_id,
-            'addition_sum' => $this->addition_sum,
-            'start' => $this->start,
-            'end' => $this->end,
-            'date' => $this->date
         ]);
 
-        $query->andFilterWhere(['between', 'date', $this->start, $this->end]);
+        //$query->andFilterWhere(['>=', 'start', $this->date]);
+        if($this->start !== null && $this->end !== null){
+
+            $query->andFilterWhere(['>=', 'date', $this->start]);
+            $query->andFilterWhere(['<=', 'date', $this->end]);
+
+        }
 
         return $dataProvider;
     }

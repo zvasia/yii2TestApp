@@ -30,7 +30,8 @@ class Users extends \yii\db\ActiveRecord
     {
         return [
             [['phone', 'full_name'], 'required'],
-            [['phone', 'balance', 'status'], 'integer'],
+            [['phone', 'balance'], 'integer'],
+            [['status'], 'boolean'],
             [['full_name'], 'string'],
         ];
     }

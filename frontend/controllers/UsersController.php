@@ -56,13 +56,6 @@ class UsersController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
 
-//    public function actionView($id)
-//    {
-//        return $this->render('view', [
-//            'model' => $this->findModel($id),
-//        ]);
-//    }
-
     /**
      * Creates a new Users model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -101,8 +94,8 @@ class UsersController extends Controller
             $id = Yii::$app->request->post('UpdateBalance')['id'];
             $newBalance = Yii::$app->request->post('UpdateBalance')['sum'];
             $model = Users::findOne(['id' => $id]);
-            if ($model != null && $model->status === 1) {
-                $model->balance = $model->balance + $newBalance;
+            if ($model !== null && $model->status === 1) {
+                $model->balance += $newBalance;
                 $model->save();
                 $add->user_id = $id;
                 $add->addition_sum = $newBalance;
@@ -156,6 +149,28 @@ class UsersController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionCancelAddition($userId, $operationId) {
+        $add = new Addition();
+        $users = new Users();
+
+        $operation = $add::findOne(['operation_id' => $operationId]);
+        $user = $users::findOne(['id' => $userId]);
+        if ($operation !== null && $user !== null){
+            $user->balance -= $operation->addition_sum;
+            $user->save();
+            $operation->delete();
+            $operation->save();
+        }
+        return $this->redirect(['users/index']);
+    }
+
+    public function actionChangestatus($id, $status) {
+        $users = new Users();
+        $user = $users::findOne(['id' => $id]);
+        $user->status = $status;
+        $user->save();
     }
 
 

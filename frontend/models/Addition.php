@@ -11,6 +11,7 @@ use Yii;
  * @property string $date
  * @property int $addition_sum
  */
+
 class Addition extends \yii\db\ActiveRecord
 {
     public $start;
@@ -50,11 +51,9 @@ class Addition extends \yii\db\ActiveRecord
     public static function getTotal($provider, $fieldName)
     {
         $total = 0;
-
         foreach ($provider as $item) {
             $total += $item[$fieldName];
         }
-
         return $total;
     }
 }
